@@ -1,0 +1,38 @@
+        //
+        // Summary:
+        //     Returns a transform child by index.
+        //
+        // Parameters:
+        //   index:
+        //     Index of the child transform to return. Must be smaller than Transform.childCount.
+        //
+        // Returns:
+        //     Transform child by index.
+        [FreeFunction("GetChild", HasExplicitThis = true)]
+        [NativeThrows]
+        public Transform GetChild(int index);
+
+        //
+        // Summary:
+        //     The game object this component is attached to. A component is always attached
+        //     to a game object.
+        public GameObject gameObject { get; }
+
+        [SecuritySafeCritical]
+        public T GetComponent<T>();
+
+
+        //
+        // Summary:
+        //     Removes a gameobject, component or asset.
+        //
+        // Parameters:
+        //   obj:
+        //     The object to destroy.
+        //
+        //   t:
+        //     The optional amount of time to delay before destroying the object.
+        [ExcludeFromDocs]
+        public static void Destroy(Object obj);
+
+

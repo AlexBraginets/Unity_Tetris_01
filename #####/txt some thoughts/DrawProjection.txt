@@ -1,0 +1,3 @@
+        Debug.Log("DrawProjection start");
+            return projection.GetComponent<TetraminoMono>();
+        Destroy(this.projection);

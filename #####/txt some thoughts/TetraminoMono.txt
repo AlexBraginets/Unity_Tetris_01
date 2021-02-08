@@ -1,0 +1,15 @@
+public GameObject GetChildGameObject(int index);
+return transform.GetChild(index).gameObject; PROCESSED###########################
+return ColorUtil.ColorWithOpacity(TetraminoUtil.Color(type), opacity);
+SpriteRenderer[] spriteRenderers = GetSpriteRenderers(transform,out childCount);
+ColorUtil.ColorWithOpacity(spriteRenderers[i].color, opacity)
+SpriteRenderer[] spriteRenderers = GetSpriteRenderers(transform, out childCount);
+Transform[] children = TransformUtil.GetChildren(transform);
+transform.DetachChildren();
+LoopUtil.LoopAction((i) => Destroy(children[i].gameObject), children.Length);
+Transform parent = transform;
+transform.position = (Vector2)tetraminoCenterPos;
+LoopUtil.LoopFunc<SpriteRenderer>((i) => children[i].GetComponent<SpriteRenderer>(), childCount);
+GameObject instance = new GameObject();
+TetraminoMono tetraminoMono = instance.AddComponent<TetraminoMono>();
+
