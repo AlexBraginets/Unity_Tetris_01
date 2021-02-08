@@ -6,7 +6,7 @@ public class DrawProjection : MonoBehaviour
 {
     private void Start()
     {
-        Debug.Log("DrawProjection start");
+       // Debug.Log("DrawProjection start");
     }
     private Tetramino projectionTetraminoData => projectionTetraminoMono.tetramino;
     private Tetramino.TetraminoType type => tetraminoToTrack.type;

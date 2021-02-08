@@ -51,7 +51,7 @@ public class HorizontalInput : MonoBehaviour
         }
         if (key == KeyCode.D)
         {
-            Debug.Log(speed + " : " + multiplier + " : " + movement);
+           // Debug.Log(speed + " : " + multiplier + " : " + movement);
         }
         return movement;
     }

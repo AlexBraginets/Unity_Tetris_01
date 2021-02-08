@@ -4,6 +4,29 @@ using VectorUtilLibrary;
 
 public class Tetramino
 {
+    public override string ToString()
+    {
+        string str = rotationCount + "\t" + type + "\t" + string.Join("\t", Poses);
+        return str;
+    }
+    public static Vector2Int[] GetPoses(TetraminoType tetraminoType, RotationDirection rotationDirection)
+    {
+        Tetramino tetramino = new Tetramino(tetraminoType);
+        switch (rotationDirection)
+        {
+            case RotationDirection.None:
+                break;
+            case RotationDirection.Clockwise:
+                tetramino.RotateClockwise();
+                break;
+            case RotationDirection.CounterClockwise:
+                tetramino.RotateAntiClockwise();
+                break;
+            default:
+                throw new UnityException($"RotationDirection type<{rotationDirection}> not supported!");
+        }
+        return tetramino.Poses;
+    }
     // 7 types of the tetramino
     public enum TetraminoType
     {
