@@ -90,7 +90,7 @@ public class TetraminoController : MonoBehaviour
         if((stopDeltaPositionSqrManitude < offsetPositionSqrManitude))
         {
             tetraminoMono.SetCenterPosition(stopPosition);
-            Debug.Log("stopDeltaPositionSqrManitude < offsetPositionSqrManitude");
+            Debug.Log("stopDeltaPositionSqrManitude < offsetPositionSqrManitude");// INTERESTING STUFF
         }
         else
         {

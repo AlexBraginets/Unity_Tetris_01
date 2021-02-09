@@ -51,11 +51,8 @@ public class Tetramino
     public void RotateClockwise()
     {
         rotationCount++;
-        for(int i = 0; i < 4; i++)
-        {
-            Vector2 newPos = RotateVector.Rotate(Poses[i], rotationPoint, RotationDirection.Clockwise);
-            Poses[i] = VectorUtil.V2_V2Int(newPos);
-        }
+
+        Poses = RotateArray(Poses, rotationPoint, RotationType.Clockwise);
     }
     public void Rotate(int rotationCount)
     {
@@ -76,11 +73,8 @@ public class Tetramino
     public void RotateAntiClockwise()
     {
         rotationCount--;
-        for (int i = 0; i < 4; i++)
-        {
-            Vector2 newPos = RotateVector.Rotate(Poses[i], rotationPoint, RotationDirection.CounterClockwise);
-            Poses[i] = VectorUtil.V2_V2Int(newPos);
-        }
+        Poses = RotateArray(Poses, rotationPoint, RotationType.AntiClockwise);
+
     }
     // rotates each point of the poses array around rotationPoint according to the rotationType
     // and returns array with rotated points

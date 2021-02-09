@@ -10,7 +10,7 @@ public class DrawProjection : MonoBehaviour
     //[HideInInspector]     #new
     public GameObject projection;
     // direction in which projection should be done
-    private Vector2Int projectionDirection = Vector2Int.right;
+    private Vector2Int projectionDirection = Vector2Int.down;
     private TetraminoMono projectionTetraminoMono
     {
         get
