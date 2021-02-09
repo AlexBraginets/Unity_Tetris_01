@@ -53,7 +53,8 @@ public class Tetramino
         rotationCount++;
         for(int i = 0; i < 4; i++)
         {
-            Poses[i] = RotateClockwise(Poses[i], rotationPoint);
+            Vector2 newPos = RotateVector.Rotate(Poses[i], rotationPoint, RotationDirection.Clockwise);
+            Poses[i] = VectorUtil.V2_V2Int(newPos);
         }
     }
     public void Rotate(int rotationCount)
@@ -77,26 +78,9 @@ public class Tetramino
         rotationCount--;
         for (int i = 0; i < 4; i++)
         {
-            Poses[i] = RotateAntiClockwise(Poses[i], rotationPoint);
+            Vector2 newPos = RotateVector.Rotate(Poses[i], rotationPoint, RotationDirection.CounterClockwise);
+            Poses[i] = VectorUtil.V2_V2Int(newPos);
         }
-    }
-    // rotates(clockwise)  point( with pos coordinates) around center
-    public static Vector2Int RotateClockwise(Vector2Int pos, Vector2 center)
-    {
-        Vector2 posRaw = ((Vector2)pos) - center;
-        float x = posRaw.y;
-        float y = -posRaw.x;
-        Vector2 newPos = new Vector2(x, y) + center;
-        return new Vector2Int((int)newPos.x, (int)newPos.y);
-    }
-    // rotates(anticlockwise)  point( with pos coordinates) around center
-    public static Vector2Int RotateAntiClockwise(Vector2Int pos, Vector2 center)
-    {
-        Vector2 posRaw = ((Vector2)pos) - center;
-        float x = -posRaw.y;
-        float y = posRaw.x;
-        Vector2 newPos = new Vector2(x, y) + center;
-        return new Vector2Int((int)newPos.x, (int)newPos.y);
     }
     // rotates each point of the poses array around rotationPoint according to the rotationType
     // and returns array with rotated points
@@ -108,16 +92,19 @@ public class Tetramino
         {
             Vector2Int pos = poses[i];
             Vector2Int rotatedPos = Vector2Int.zero;
+            Vector2 newPos;
             switch (rotationType)
             {
                 case RotationType.None:
                     rotatedPos = pos;
                     break;
                 case RotationType.Clockwise:
-                    rotatedPos = RotateClockwise(pos, rotationPoint);
+                    newPos = RotateVector.Rotate(pos, rotationPoint, RotationDirection.Clockwise);
+                    rotatedPos = VectorUtil.V2_V2Int(newPos);
                     break;
                 case RotationType.AntiClockwise:
-                    rotatedPos = RotateAntiClockwise(pos, rotationPoint);
+                    newPos = RotateVector.Rotate(pos, rotationPoint, RotationDirection.CounterClockwise);
+                    rotatedPos = VectorUtil.V2_V2Int(newPos);
                     break;
                 default:
                     Debug.LogError("this rotation type is not supported: " + rotationType);

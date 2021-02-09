@@ -12,6 +12,10 @@ public enum RotationDirection
 
 public static class RotateVector
 {
+    public static Vector2 Rotate(Vector2 vector, Vector2 rotationPoint, RotationDirection rotation)
+    {
+        return Rotate(vector - rotationPoint, rotation) + rotationPoint;
+    }
     public static Vector2 Rotate(Vector2 vector, RotationDirection rotation)
     {
         Vector2 rotated;

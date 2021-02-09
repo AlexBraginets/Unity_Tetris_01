@@ -8,9 +8,9 @@ public class TestingVectorRotate : MonoBehaviour
     public void FullTest()
     {
         Tetramino.TetraminoType[] tetraminoTypes =
-            (Tetramino.TetraminoType[])System.Enum.GetValues(typeof(Tetramino.TetraminoType));
+          EnumUtil.GetValues<Tetramino.TetraminoType>();
         RotationDirection[] rotationDirectionTypes =
-            (RotationDirection[])System.Enum.GetValues(typeof(RotationDirection));
+            EnumUtil.GetValues<RotationDirection>();
         bool identic = true;
         int testCount = 0;
         foreach(var tetraminoType in tetraminoTypes)
@@ -61,8 +61,8 @@ public class TestingVectorRotate : MonoBehaviour
         Vector2 rotationPoint = new Tetramino(tetraminoType).rotationPoint;
         for (int i = 0; i < 4; i++)
         {
-            Vector2 rotated = RotateVector.Rotate(tetraminoPoses[i] - rotationPoint, rotationDirection);
-            rotationVectorPoses[i] = VectorUtil.V2_V2Int(rotated + rotationPoint);
+            Vector2 rotated = RotateVector.Rotate(tetraminoPoses[i], rotationPoint, rotationDirection);
+            rotationVectorPoses[i] = VectorUtil.V2_V2Int(rotated);
         }
         return string.Join("\t", rotationVectorPoses);
     }
