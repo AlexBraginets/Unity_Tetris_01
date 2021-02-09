@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[DefaultExecutionOrder(100)]
 public class GravityComponent : MonoBehaviour
 {
     public float fallTime = 1f;

@@ -1,13 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
+[DefaultExecutionOrder(101)]
 public class DrawProjection : MonoBehaviour
 {
-    private void Start()
-    {
-       // Debug.Log("DrawProjection start");
-    }
     private Tetramino projectionTetraminoData => projectionTetraminoMono.tetramino;
     private Tetramino.TetraminoType type => tetraminoToTrack.type;
     // tetramino that should be projected
@@ -16,7 +10,7 @@ public class DrawProjection : MonoBehaviour
     //[HideInInspector]     #new
     public GameObject projection;
     // direction in which projection should be done
-    private Vector2Int projectionDirection = Vector2Int.down;
+    private Vector2Int projectionDirection = Vector2Int.right;
     private TetraminoMono projectionTetraminoMono
     {
         get

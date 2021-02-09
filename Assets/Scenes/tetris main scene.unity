@@ -614,7 +614,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88161712085038344ad61d9c2c81dd10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallTime: 1
+  fallTime: 0.01
   projection: {fileID: 1882681372}
   timer: 0
 --- !u!1 &1481735619

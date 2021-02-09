@@ -4,7 +4,7 @@ public class DisplayBlocks : MonoBehaviour
 {
     public GameObject prefab;
     private GameObject[,] blockGameObjects;
-    private IBlock[,] blocks = Grid.Ins.blocks;
+    private IBlock[,] blocks = Grid.Ins.blocks;// INTERESTING STUFF
     public static DisplayBlocks Ins;
     private void Awake()
     {

@@ -6,7 +6,6 @@ using TetraminoUtils;
 using CommonNonUnityUtils;
 using VectorUtilLibrary;
 using TransformUtilLibrary;
-
 public class TetraminoMono : MonoBehaviour
 {
     [Header("Choose one of seven tetramino types")]
