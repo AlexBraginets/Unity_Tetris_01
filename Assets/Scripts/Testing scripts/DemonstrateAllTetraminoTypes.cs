@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DemonstrateAllTetraminoTypes : MonoBehaviour
 {
@@ -8,15 +6,21 @@ public class DemonstrateAllTetraminoTypes : MonoBehaviour
     void Start()
     {
         int tetraminoTypeIndex = 0;
-        foreach (Tetramino.TetraminoType tetraminoType in System.Enum.GetValues(typeof(Tetramino.TetraminoType)))
+        foreach (Tetramino.TetraminoType tetraminoType in EnumUtil.GetValues<Tetramino.TetraminoType>())
         {
-            GameObject go = new GameObject();
-            go.transform.parent = transform;
-            go.transform.localPosition = Vector3.right*offset*tetraminoTypeIndex;
+            Vector3 localPosition = Vector3.right * offset * tetraminoTypeIndex;
+            GameObject go = InstantiateChildEmptyGameObject(localPosition);
             TetraminoMono tetraminoMono = go.AddComponent<TetraminoMono>();
             tetraminoMono.type = tetraminoType;
             tetraminoTypeIndex++;
         }
+    }
+    private GameObject InstantiateChildEmptyGameObject(Vector3 localPosition)
+    {
+        GameObject go = new GameObject();
+        go.transform.parent = transform;
+        go.transform.localPosition = localPosition;
+        return go;
     }
     
 }
