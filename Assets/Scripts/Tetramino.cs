@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using CommonNonUnityUtils;
 using VectorUtilLibrary;
-
+using static RotationUtil;
 public partial class Tetramino 
 {
     public override string ToString()
@@ -51,7 +51,6 @@ public partial class Tetramino
     public void RotateClockwise()
     {
         rotationCount++;
-
         Poses = RotateArray(Poses, rotationPoint, RotationType.Clockwise);
     }
     public void Rotate(int rotationCount)
@@ -76,38 +75,7 @@ public partial class Tetramino
         Poses = RotateArray(Poses, rotationPoint, RotationType.AntiClockwise);
 
     }
-    // rotates each point of the poses array around rotationPoint according to the rotationType
-    // and returns array with rotated points
-    public static Vector2Int[] RotateArray(Vector2Int[] poses, Vector2 rotationPoint, RotationType rotationType)
-    {
-        int length = poses.Length;
-        Vector2Int[] rotatedPoses = new Vector2Int[length];
-        for(int i = 0; i < length; i++)
-        {
-            Vector2Int pos = poses[i];
-            Vector2Int rotatedPos = Vector2Int.zero;
-            Vector2 newPos;
-            switch (rotationType)
-            {
-                case RotationType.None:
-                    rotatedPos = pos;
-                    break;
-                case RotationType.Clockwise:
-                    newPos = RotateVector.Rotate(pos, rotationPoint, RotationDirection.Clockwise);
-                    rotatedPos = VectorUtil.V2_V2Int(newPos);
-                    break;
-                case RotationType.AntiClockwise:
-                    newPos = RotateVector.Rotate(pos, rotationPoint, RotationDirection.CounterClockwise);
-                    rotatedPos = VectorUtil.V2_V2Int(newPos);
-                    break;
-                default:
-                    Debug.LogError("this rotation type is not supported: " + rotationType);
-                    break;
-            }
-            rotatedPoses[i] = rotatedPos;
-        }
-        return rotatedPoses;
-    }
+    
     #endregion
     #region Poses: AbsPoses property and GetAbsPoses method
     // returns WORLD cells coordinates
