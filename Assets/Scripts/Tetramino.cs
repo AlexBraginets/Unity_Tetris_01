@@ -2,7 +2,7 @@
 using CommonNonUnityUtils;
 using VectorUtilLibrary;
 
-public class Tetramino
+public partial class Tetramino 
 {
     public override string ToString()
     {
@@ -36,7 +36,7 @@ public class Tetramino
     {
         None, Clockwise, AntiClockwise
     }
-    public TetraminoType type { get; }
+    public TetraminoType type { get; private set; }
     // coordinates of 4 cells that make up the tetramino
     // coords are relative to the center of tetramino
     public Vector2Int[] Poses = null;
@@ -128,57 +128,7 @@ public class Tetramino
     // set ups rotation point and coordinates(relative to the center of tetramino) of cells that form a tetromino
     public Tetramino(TetraminoType type)
     {
-        this.type = type;
-        switch (type)
-        {
-            case TetraminoType.I:
-                Poses = GetPoses(new int[4,2]{ {0, 0},{1, 0},{2, 0},{3, 0} });
-                rotationPoint = new Vector2(3f/2f, -1f/2f);
-                break;
-            case TetraminoType.J:
-                Poses = GetPoses(new int[4, 2] { {0, 0}, {1 , 0}, {1, 1}, {1, 2} });
-                rotationPoint = new Vector2(1f, 1f);
-                break;
-            case TetraminoType.L:
-                Poses = GetPoses(new int[4, 2] { {0, 0}, {1, 0}, {0, 1}, {0, 2} });
-                rotationPoint = new Vector2(0f, 1f);
-                break;
-            case TetraminoType.O:
-                Poses = GetPoses(new int[4, 2] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } });
-                rotationPoint = new Vector2(1f/2f, 1f/2f);
-                break;
-            case TetraminoType.S:
-                Poses = GetPoses(new int[4, 2] { {0, 0}, {1 , 0}, {1, 1}, {2, 1} });
-                rotationPoint = new Vector2(1f, 0f);
-                break;
-            case TetraminoType.T:
-                Poses = GetPoses(new int[4, 2] { { 1, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 } });
-                rotationPoint = new Vector2(1f, 1f);
-                break;
-            case TetraminoType.Z:
-                Poses = GetPoses(new int[4, 2] { {0, 1}, {1, 1}, {1, 0}, {2, 0} });
-                rotationPoint = new Vector2(1f, 0f);
-                break;
-            default:
-                Debug.LogError("Unsupported tetramino type: " + type);
-                break;
-        }
+        Builder.SetUp(this, type);
     }
-
-    // utility for initializing Poses array
-    private static Vector2Int[] GetPoses(int[,] doubleArrayPoses)
-    {
-        Vector2Int[] vectorPoses = new Vector2Int[4];
-        if(doubleArrayPoses.GetLength(0)!=4 || doubleArrayPoses.GetLength(1)!= 2)
-        {
-            Debug.LogError("Invalid double array poses!");
-        }
-        for(int posIndex = 0; posIndex < 4; posIndex++)
-        {
-            int x = doubleArrayPoses[posIndex, 0];
-            int y = doubleArrayPoses[posIndex, 1];
-            vectorPoses[posIndex] = new Vector2Int(x, y);
-        }
-        return vectorPoses;
-    }
+    
 }
