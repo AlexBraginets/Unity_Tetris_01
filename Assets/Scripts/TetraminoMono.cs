@@ -11,6 +11,7 @@ public class TetraminoMono : MonoBehaviour
     [Header("Choose one of seven tetramino types")]
     public Tetramino.TetraminoType type;
     public float offset => Grid.offset;
+    public Tetramino _tetramino = null;
     public Tetramino tetramino
     {
         get
@@ -42,7 +43,6 @@ public class TetraminoMono : MonoBehaviour
             return ColorUtil.ColorWithOpacity(TetraminoUtil.Color(type), opacity);
         }
     }
-    public Tetramino _tetramino = null;
     bool inited = false;
     #region opacity & color stuff
     private float opacity = 1f;
@@ -50,7 +50,8 @@ public class TetraminoMono : MonoBehaviour
     public void SetOpacity(float opacity)
     {
         int childCount;
-        SpriteRenderer[] spriteRenderers = GetSpriteRenderers(transform,out childCount);
+        SpriteRenderer[] spriteRenderers = 
+            GetComponentUtil.GetComponentsInChildren<SpriteRenderer>(transform,out childCount);
         LoopUtil.LoopAction((i) => 
         spriteRenderers[i].color = 
         ColorUtil.ColorWithOpacity(spriteRenderers[i].color, opacity), childCount);
@@ -71,7 +72,8 @@ public class TetraminoMono : MonoBehaviour
     private void SetColor(Tetramino.TetraminoType type)
     {
         int childCount;
-        SpriteRenderer[] spriteRenderers = GetSpriteRenderers(transform, out childCount);
+        SpriteRenderer[] spriteRenderers = 
+            GetComponentUtil.GetComponentsInChildren<SpriteRenderer>(transform, out childCount);
         #region old version
         //for (int i = 0; i < 4; i++)
         //{
@@ -177,15 +179,7 @@ public class TetraminoMono : MonoBehaviour
         LoopUtil.LoopAction((i) => SquareUtil.InstantiateAndSetUpSquare(parent, offset, poses[i], color),
             poses.Length);
     }
-    private static SpriteRenderer[] GetSpriteRenderers(Transform transform, out int length)
-    {
-        Transform[] children = TransformUtil.GetChildren(transform);
-        int childCount = children.Length;
-        SpriteRenderer[] spriteRenderers =
-            LoopUtil.LoopFunc<SpriteRenderer>((i) => children[i].GetComponent<SpriteRenderer>(), childCount);
-        length = childCount;
-        return spriteRenderers;
-    }
+   
     public static GameObject Instantiate(Tetramino.TetraminoType type, string name = "")
     {
         //Debug.Log("TetraminoMono.Instantiate");
