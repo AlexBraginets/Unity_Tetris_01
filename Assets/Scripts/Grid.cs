@@ -7,8 +7,15 @@ public class Grid
     public static Grid Ins;
     // size of the Tetris play grid
     public static Vector2Int gridSize = new Vector2Int(10, 25);
+    // hide height count at the top
+    private const int HIDE_HIGHT_COUNT = 5;
+    public static bool HideBlock(int row)
+    {
+        int wallHeight = gridSize.y;
+        return wallHeight - row <= HIDE_HIGHT_COUNT;
+    }
     // size of a single tetramino cell
-    // WARNING: could cause unexpected behaviour due to missing multiplying by offset where necessary
+    // WARNING: could cause unexpected behaviour due to the inconsistency of the use of the variable
     public static float offset = 1f;
     // cache reference
     static Grid()
@@ -16,10 +23,21 @@ public class Grid
         Ins = new Grid();
     }
     // 2D array for storing what blocks on the grid are occupied & by what
-    // also contains walls and floor information to created initial borders
+    // also contains walls and floor information for created initial borders
     public IBlock[,] blocks;
-    // constructor to initialise blocks array with borders
-    public Grid()
+    public IBlock this[Vector2Int pos]
+    {
+        get
+        {
+            return blocks[pos.x, pos.y];
+        }
+        set
+        {
+            blocks[pos.x, pos.y] = value;
+        }
+    }
+    // constructor: initialises blocks array with borders
+    private Grid()
     {
         int xCount = gridSize.x + 2;
         int yCount = gridSize.y + 1;
@@ -33,7 +51,7 @@ public class Grid
         FillRightWall();
         FillFloor();
     }
-    // fills right wall into blocks array
+    // fills left wall into blocks array
     private void FillLeftWall()
     {
         int wallHeight = blocks.GetLength(1) - 1;
@@ -43,7 +61,7 @@ public class Grid
             blocks[xPos, y] = new WallBlock(BlockType.LeftWall);
         }
     }
-    // fills left wall into blocks array
+    // fills right wall into blocks array
     private void FillRightWall()
     {
         int wallHeight = blocks.GetLength(1) - 1;
@@ -56,9 +74,9 @@ public class Grid
     // fills floor into blocks array
     private void FillFloor()
     {
-        int floorWidth = blocks.GetLength(0);
+        int floorWidth = blocks.GetLength(0) - 1;
         int yPos = 0;
-        for (int x = 0; x < floorWidth; x++)
+        for (int x = 0; x <= floorWidth; x++)
         {
             blocks[x, yPos] = new WallBlock(BlockType.Floor);
         }
@@ -70,12 +88,12 @@ public class Grid
     {
         bool collision = false;
         Vector2Int[] tryPoses = tetramino.GetAbsPoses(offset, rotation);
-        foreach(Vector2Int pos in tryPoses)
+        foreach (Vector2Int pos in tryPoses)
         {
             if (0 <= pos.x && pos.x < grid.blocks.GetLength(0)
                 && 0 <= pos.y && pos.y < grid.blocks.GetLength(1))
             {
-                collision = grid.blocks[pos.x, pos.y] != null;
+                collision = grid[pos] != null;
             }
             else
             {
@@ -89,15 +107,11 @@ public class Grid
     // makes cells occupied by tetramino impassable
     public void FreezeTetraminoArea(TetraminoMono tetraminoMono)
     {
-        //foreach (Vector2Int pos in )
-        //{
-        //    blocks[pos.x, pos.y] = new WallBlock(BlockType.Unspecified);
-        //}
         Tetramino tetramino = tetraminoMono.tetramino;
         Vector2Int[] absPoses = tetramino.AbsPoses;
         LoopUtil.LoopAction((i) =>
         {
-            blocks[absPoses[i].x, absPoses[i].y] = 
+            this[absPoses[i]] =
             new WallBlock(BlockType.Unspecified, tetraminoMono.GetChildGameObject(i));
         }
         , absPoses.Length);
@@ -119,8 +133,9 @@ public class Grid
                 break;
             }
         }
-        if(offsetCount == 0)
+        if (offsetCount == 0)
         {
+            Debug.Log("Tetramino already is in position where it can't be.");
             Debug.LogError("?");
             Debug.Log(projectionDir);
             Debug.Break();
@@ -138,9 +153,9 @@ public class Grid
         int colCount = Grid.gridSize.x;
         Grid grid = Grid.Ins;
         IBlock[,] blocks = grid.blocks;
-        for(int col = 1; col <= colCount; col++)
+        for (int col = 1; col <= colCount; col++)
         {
-            if(blocks[col, row] == null)
+            if (blocks[col, row] == null)
             {
                 full = false;
                 break;
@@ -151,25 +166,6 @@ public class Grid
     public static void EmptyAndDestroyBricksInRow(int rowIndex)
     {
         Grid.Ins._EmptyAndDestroyBricksInRow(rowIndex);
-        //Grid grid = Grid.Ins;
-        //IBlock[,] blocks = grid.blocks;
-        //Vector2Int gridSize = Grid.gridSize;
-        //int colCount = gridSize.x;
-        //for (int colIndex = 1; colIndex <= colCount; colIndex++)
-        //{
-        //    IBlock block = blocks[colIndex, rowIndex];
-        //    if (block != null)
-        //    {
-        //        if (block.gameObject == null)
-        //        {
-        //            Debug.LogError("Block contains null gameobject!");
-        //        }
-        //        GameObject.Destroy(block.gameObject);
-        //        // TO DO: destroy block.gameObject.transform.parent.gameObject if all it's children are destroyed
-        //        blocks[colIndex, rowIndex] = null;
-        //    }
-
-        //}
     }
     private void _EmptyAndDestroyBricksInRow(int rowIndex)
     {
@@ -178,56 +174,20 @@ public class Grid
             IBlock block = blocks[colIndex, rowIndex];
             if (block != null)
             {
-                if (block.gameObject == null)
+                GameObject blockGameObject = block.gameObject;
+                if (blockGameObject == null)
                 {
                     Debug.LogError("Block contains null gameobject!");
                 }
-                GameObject blockGameObject= block.gameObject;
                 GameObject.Destroy(blockGameObject);
                 blocks[colIndex, rowIndex] = null;
             }
         };
-        ActionInRow(rowIndex, action);
-
-        //int colCount = gridSize.x;
-        //for (int colIndex = 1; colIndex <= colCount; colIndex++)
-        //{
-        //    IBlock block = blocks[colIndex, rowIndex];
-        //    if (block != null)
-        //    {
-        //        if (block.gameObject == null)
-        //        {
-        //            Debug.LogError("Block contains null gameobject!");
-        //        }
-        //        GameObject.Destroy(block.gameObject);
-        //        // TO DO: destroy block.gameObject.transform.parent.gameObject if all it's children are destroyed
-        //        blocks[colIndex, rowIndex] = null;
-        //    }
-
-        //}
+        ActionInRow(action);
     }
     public static void DropBricksInRow(int rowIndex, int dropCount)
     {
         Grid.Ins._DropBricksInRow(rowIndex, dropCount);
-        //Grid grid = Grid.Ins;
-        //IBlock[,] blocks = grid.blocks;
-        //Vector2Int gridSize = Grid.gridSize;
-        //int colCount = gridSize.x;
-        //for (int colIndex = 1; colIndex <= colCount; colIndex++)
-        //{
-        //    IBlock block = blocks[colIndex, rowIndex];
-        //    if (block != null)
-        //    {
-        //        if (block.gameObject == null)
-        //        {
-        //            Debug.LogError("Block contains null gameobject!");
-        //        }
-        //        block.gameObject.transform.Translate(Vector3.down * dropCount);
-        //        blocks[colIndex, rowIndex] = null;
-        //        blocks[colIndex, rowIndex - dropCount] = block;
-        //    }
-
-        //}
     }
     private void _DropBricksInRow(int rowIndex, int dropCount)
     {
@@ -236,36 +196,20 @@ public class Grid
             IBlock block = blocks[colIndex, rowIndex];
             if (block != null)
             {
-                if(block.gameObject == null)
+                GameObject blockGameObject = block.gameObject;
+                if (blockGameObject == null)
                 {
                     Debug.LogError("Block contains null gameobject!");
                 }
-                Transform blockTransform = block.gameObject.transform;
-                blockTransform.Translate(dropCount*Vector3.down);
+                Transform blockTransform = blockGameObject.transform;
+                blockTransform.Translate(dropCount * Vector3.down);
                 blocks[colIndex, rowIndex] = null;
                 blocks[colIndex, rowIndex - dropCount] = block;
             }
         };
-        ActionInRow(rowIndex, action);
-        //int colCount = gridSize.x;
-        //for (int colIndex = 1; colIndex <= colCount; colIndex++)
-        //{
-        //    IBlock block = blocks[colIndex, rowIndex];
-        //    if (block != null)
-        //    {
-        //        if (block.gameObject == null)
-        //        {
-        //            Debug.LogError("Block contains null gameobject!");
-        //        }
-        //        // INTERESTING STUFF
-        //        block.gameObject.transform.Translate(Vector3.down * dropCount);
-
-        //        blocks[colIndex, rowIndex] = null;
-        //        blocks[colIndex, rowIndex - dropCount] = block;
-        //    }
-        //}
+        ActionInRow(action);
     }
-    private static void ActionInRow(int row, System.Action<int> action)
+    private static void ActionInRow(System.Action<int> action)
     {
         int colCount = gridSize.x;
         // TO FIX: can redo via LoopUtil.Action but show do something with iterator 'cause in LoopUtil.Action

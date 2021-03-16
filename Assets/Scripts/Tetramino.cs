@@ -4,17 +4,6 @@ using VectorUtilLibrary;
 using static RotationUtil;
 public partial class Tetramino : TetraminoTransform
 {
-    // set ups rotation point and coordinates(relative to the center of tetramino) of cells that form a tetromino
-    public Tetramino(TetraminoType type)
-    {
-        Builder.SetUp(this, type);
-    }
-    public override string ToString()
-    {
-        string str = rotationCount + "\t" + type + "\t" + string.Join("\t", Poses);
-        return str;
-    }
-    
     // 7 types of the tetramino
     public enum TetraminoType
     {
@@ -24,7 +13,12 @@ public partial class Tetramino : TetraminoTransform
     {
         None, Clockwise, AntiClockwise
     }
-    
+    // sets up rotation point and tetramino's cells coordinates
+    // also sets up tetramino's type
+    public Tetramino(TetraminoType type)
+    {
+        Builder.SetUp(this, type);
+    }
     #region Rotation
     // increases rotation count & updates cells positions according to the rotation
     public void RotateClockwise()
@@ -43,19 +37,21 @@ public partial class Tetramino : TetraminoTransform
     {
         float sign = Mathf.Sign(rotationCount);
         int abs = Mathf.Abs(rotationCount);
+        rotationCount = abs % 4;
         if (sign > 0)
         {
-            this.rotationCount += abs % 4;
-            LoopUtil.LoopAction((i) => RotateClockwise(), abs % 4);
+            LoopUtil.LoopAction((i) => RotateClockwise(), rotationCount);
         }
         else if (sign < 0)
         {
-            this.rotationCount -= abs % 4;
-            LoopUtil.LoopAction((i) => RotateAntiClockwise(), abs % 4);
+            LoopUtil.LoopAction((i) => RotateAntiClockwise(), rotationCount);
         }
     }
-    
     #endregion
-   
-    
+    // returns tetramino's rotation count,  type and local  positions
+    public override string ToString()
+    {
+        return rotationCount + "\t" + type + "\t" + string.Join("\t", Poses);
+    }
+
 }

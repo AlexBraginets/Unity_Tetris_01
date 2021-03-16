@@ -5,9 +5,9 @@ using VectorUtilLibrary;
 
 public class TetraminoController : MonoBehaviour
 {
-    public static TetraminoController Ins;
     public TetraminoMono toControl;
     public DrawProjection projectionDrawer;
+    public static TetraminoController Ins;
     private TetraminoMono projection;
     private void Start()
     {
@@ -20,25 +20,21 @@ public class TetraminoController : MonoBehaviour
     }
     private void Update()
     {
-        ProcessMovementAndRotation(toControl, projection);
+        TetraminoController.ProcessMovementAndRotation(toControl, projection);
     }
     private static void ProcessMovementAndRotation(TetraminoMono tetraminoMono, TetraminoMono projection)
     {
         ProcessHorizontal(tetraminoMono);
         ProcessRotation(tetraminoMono, projection);
     }
-    private static void ProcessRotation(TetraminoMono tetraminoMono, TetraminoMono projection)
+    private static void ProcessHorizontal(TetraminoMono tetraminoMono)
     {
-        Tetramino tetraminoData = tetraminoMono.tetramino;
-        if (Input.GetKeyDown(KeyCode.W))
+        //ProcessHorizontal(Grid.Ins, tetraminoMono, ProcessHorizontalInput.Movement);
+        Vector2Int horMovement;
+        bool processHorizontal = ProcessHorizontalInput(out horMovement);
+        if (processHorizontal)
         {
-            bool collision =
-                Grid.Collision(Grid.Ins, tetraminoData, Vector2Int.zero, Tetramino.RotationType.Clockwise);
-            if (!collision)
-            {
-                tetraminoMono.RotateClockwise();
-                projection.RotateClockwise();
-            }
+            ProcessHorizontal(Grid.Ins, tetraminoMono, horMovement);
         }
     }
     private static bool ProcessHorizontalInput(out Vector2Int movement)
@@ -61,40 +57,41 @@ public class TetraminoController : MonoBehaviour
         }
         return processHorizontal;
     }
-    private static void ProcessHorizontal(TetraminoMono tetraminoMono)
-    {
-        //ProcessHorizontal(Grid.Ins, tetraminoMono, ProcessHorizontalInput.Movement);
-        Vector2Int horMovement;
-        bool processHorizontal = ProcessHorizontalInput(out horMovement);
-        if (processHorizontal)
-        {
-            ProcessHorizontal(Grid.Ins, tetraminoMono, horMovement);
-        }
-    }
     private static void ProcessHorizontal(Grid grid, TetraminoMono tetraminoMono, Vector2Int offset)
     {
         if (offset.sqrMagnitude == 0)
             return;
         Tetramino tetraminoData = tetraminoMono.tetramino;
-        //bool collision =
-        //    Grid.Collision(grid, tetraminoData, offset, Tetramino.RotationType.None);
-        //if (!collision)
-        //{
-        //    tetraminoMono.TranslateCenterPosition(offset);
-        //}
-        Vector2Int projectionDir = VectorUtil.V2_V2Int(((Vector2)offset).normalized);
-        Vector2Int stopPosition = Grid.StopPosition(Grid.Ins, tetraminoData, projectionDir);
+        
+        //Vector2Int projectionDir = VectorUtil.V2_V2Int(((Vector2)offset).normalized);
+        Vector2Int projectionDir = offset;
+        Vector2Int stopPosition = Grid.StopPosition(grid, tetraminoData, projectionDir);
         Vector2Int stopDeltaPosition = stopPosition - tetraminoData.centerPos;
         int stopDeltaPositionSqrManitude = stopDeltaPosition.sqrMagnitude;
         int offsetPositionSqrManitude = offset.sqrMagnitude;
-        if((stopDeltaPositionSqrManitude < offsetPositionSqrManitude))
+        if(stopDeltaPositionSqrManitude < offsetPositionSqrManitude)
         {
             tetraminoMono.SetCenterPosition(stopPosition);
-            Debug.Log("stopDeltaPositionSqrManitude < offsetPositionSqrManitude");// INTERESTING STUFF
+            Debug.Log("stopDeltaPositionSqrManitude < offsetPositionSqrManitude");
+            // tetramino can't move because of grid blocks being occupied
         }
         else
         {
             tetraminoMono.TranslateCenterPosition(offset);
+        }
+    }
+    private static void ProcessRotation(TetraminoMono tetraminoMono, TetraminoMono projection)
+    {
+        Tetramino tetraminoData = tetraminoMono.tetramino;
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            bool collision =
+                Grid.Collision(Grid.Ins, tetraminoData, Vector2Int.zero, Tetramino.RotationType.Clockwise);
+            if (!collision)
+            {
+                tetraminoMono.RotateClockwise();
+                projection.RotateClockwise();
+            }
         }
     }
 }

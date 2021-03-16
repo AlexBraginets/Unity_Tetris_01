@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using CommonNonUnityUtils;
 // builds Tetris playing grid at start
 public class GridMono : MonoBehaviour
@@ -18,14 +16,14 @@ public class GridMono : MonoBehaviour
         float offset = Grid.offset;
         int xCount = Grid.gridSize.x;
         int yCount = Grid.gridSize.y;
-        
+
         LoopUtil.LoopAction(
             (x, y)
             =>
             {
                 GameObject square =
-                SquareUtil.InstantiateAndSetUpSquare(parent, offset, new Vector2(x, y), color);
-                if (yCount - y <= 5)
+                SquareUtil.InstantiateAndSetUpSquare(parent, offset * new Vector2(x, y), color);
+                if (Grid.HideBlock(y))
                     square.SetActive(false);
             },
             xCount, yCount);

@@ -9,15 +9,14 @@ public class TetraminoTransform
     public Tetramino.TetraminoType type { get; protected set; }
     // coordinates of 4 cells that make up the tetramino
     // coords are relative to the center of tetramino
-    public Vector2Int[] Poses = null;
+    public Vector2Int[] Poses { get; protected set; } = null;
     // world position of tetramino center
-    public Vector2Int centerPos;
+    public Vector2Int centerPos { get; protected set; }
     // point around which tetramino rotates
-    public Vector2 rotationPoint;
+    public Vector2 rotationPoint { get;protected set; }
     // each rotation clockwise increases rotation count by 1, rotation anticlockwise decreases by 1
     public int rotationCount { get; protected set; } = 0;
-   
-    // returns WORLDS cells coordinates if the tetramino was moved by offset & rotated according to rotation type
+    // returns cells' WORLD coordinates if the tetramino was moved by offset & rotated according to rotation type
     public Vector2Int[] GetAbsPoses(Vector2Int offset, Tetramino.RotationType rotation)
     {
         Vector2Int[] rotated = RotateArray(Poses, rotationPoint, rotation);
@@ -28,25 +27,12 @@ public class TetraminoTransform
     {
         get
         {
-            return VectorUtil.Add(Poses, centerPos);
+            return GetAbsPoses(Vector2Int.zero, Tetramino.RotationType.None);
         }
     }
-    public static Vector2Int[] GetPoses(Tetramino.TetraminoType tetraminoType, RotationDirection rotationDirection)
+    public void SetCenterPosition(Vector2Int centerPos)
     {
-        Tetramino tetramino = new Tetramino(tetraminoType);
-        switch (rotationDirection)
-        {
-            case RotationDirection.None:
-                break;
-            case RotationDirection.Clockwise:
-                tetramino.RotateClockwise();
-                break;
-            case RotationDirection.CounterClockwise:
-                tetramino.RotateAntiClockwise();
-                break;
-            default:
-                throw new UnityException($"RotationDirection type<{rotationDirection}> not supported!");
-        }
-        return tetramino.Poses;
+        this.centerPos = centerPos;
     }
+
 }

@@ -31,7 +31,7 @@ public static class RotateVector
                 rotated = RotateCounterClockwise(vector);
                 break;
             default:
-                throw new UnityException($"RotationDirection type<{rotation}> not supported!");
+                throw new UnityException($"RotationDirection type<{rotation}> is not supported!");
         }
         return rotated;
     }

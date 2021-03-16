@@ -51,12 +51,12 @@ public class TestingVectorRotate : MonoBehaviour
     //}
     private static string TetraminoString(Tetramino.TetraminoType tetraminoType, RotationDirection rotationDirection)
     {
-        Vector2Int[] tetraminoRotatedPoses = Tetramino.GetPoses(tetraminoType, rotationDirection);
+        Vector2Int[] tetraminoRotatedPoses = TetraminoTransformUtil.GetPoses(tetraminoType, rotationDirection);
         return string.Join("\t", tetraminoRotatedPoses);
     }
     private static string VectorPosesString(Tetramino.TetraminoType tetraminoType, RotationDirection rotationDirection)
     {
-        Vector2Int[] tetraminoPoses = Tetramino.GetPoses(tetraminoType, RotationDirection.None);
+        Vector2Int[] tetraminoPoses = TetraminoTransformUtil.GetPoses(tetraminoType, RotationDirection.None);
         Vector2Int[] rotationVectorPoses = new Vector2Int[4];
         Vector2 rotationPoint = new Tetramino(tetraminoType).rotationPoint;
         for (int i = 0; i < 4; i++)

@@ -8,8 +8,9 @@ public static class SweepLine
     private static int[] RowsToCheckForSweep(Tetramino tetramino)
     {
         Vector2Int[] absPoses = tetramino.AbsPoses;
-        int[] rowsToCheckForSweep = LoopUtil.LoopFunc<int>((i) => absPoses[i].y, 4);
-        return rowsToCheckForSweep.Distinct().OrderBy(i=>i).ToArray();
+        int[] rowsToCheckForSweepNotUnique = LoopUtil.LoopFunc<int>((i) => absPoses[i].y, 4);
+        int[] rowsToCheckForSweepUnique = rowsToCheckForSweepNotUnique.Distinct().OrderBy(i=>i).ToArray();
+        return rowsToCheckForSweepUnique;
     }
     private static List<int> RowsToSweep(Tetramino tetramino, out bool sweep)
     {
@@ -29,11 +30,8 @@ public static class SweepLine
     private static List<int> RowsToSweepExtended(Tetramino tetramino, out bool sweep)
     {
         List<int> rowsToSweep = RowsToSweep(tetramino, out sweep);
-        List<int> rowsToSweepExtended = new List<int>();
-        foreach(int rowToSweep in rowsToSweep)
-        {
-            rowsToSweepExtended.Add(rowToSweep);
-        }
+        List<int> rowsToSweepExtended = rowsToSweep.ToList();// copy list
+       
         int rowCount = Grid.gridSize.y;
         rowsToSweepExtended.Add( rowCount + 1 );
         return rowsToSweepExtended;
@@ -42,7 +40,7 @@ public static class SweepLine
     private static List<int> InRange(int a, int b)
     {
         List<int> result = new List<int>();
-        for(int i = a +1; i < b; i++)
+        for(int i = a + 1; i < b; i++)
         {
             result.Add(i);
         }
@@ -80,34 +78,4 @@ public static class SweepLine
             }
         }
     }
-    //public static void DeleteAndDropLine(int rowIndex, int dropCount) // the name is REALLY BAD
-    //{
-    //    Grid grid = Grid.Ins;
-    //    IBlock[,] blocks = grid.blocks;
-    //    Vector2Int gridSize = Grid.gridSize;
-    //    List<GameObject> gameObjectsOnLine = new List<GameObject>();
-    //    int colCount = gridSize.x;
-    //    for (int colIndex = 1; colIndex <= colCount; colIndex++)
-    //    {
-    //        IBlock block = blocks[colCount, rowIndex];
-    //        if (block != null)
-    //        {
-    //            if (block.gameObject == null)
-    //            {
-    //                Debug.LogError("Block contains null gameobject!");
-    //            }
-    //            gameObjectsOnLine.Add(block.gameObject);
-    //        }
-    //    }
-    //    DropGameObjects(gameObjectsOnLine, dropCount);
-    //    for (int colIndex = 1; colIndex <= colCount; colIndex++)
-    //    {
-    //        blocks[rowIndex, colIndex] =
-
-
-    //    }
-
-    //}
-    
-    
 }

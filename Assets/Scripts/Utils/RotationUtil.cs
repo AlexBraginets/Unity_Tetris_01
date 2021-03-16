@@ -15,21 +15,8 @@ public static class RotationUtil
         for (int i = 0; i < length; i++)
         {
             Vector2Int pos = poses[i];
-            Vector2 rotatedPos;
-            switch (rotationType)
-            {
-                case RotationType.None:
-                    rotatedPos = pos;
-                    break;
-                case RotationType.Clockwise:
-                    rotatedPos = RotateVector.Rotate(pos, rotationPoint, RotationDirection.Clockwise);
-                    break;
-                case RotationType.AntiClockwise:
-                    rotatedPos = RotateVector.Rotate(pos, rotationPoint, RotationDirection.CounterClockwise);
-                    break;
-                default:
-                    throw new UnityException("this rotation type is not supported: " + rotationType);
-            }
+            Vector2 rotatedPos =
+                RotateVector.Rotate(pos, rotationPoint, (RotationDirection)rotationType);
             rotatedPoses[i] = VectorUtil.V2_V2Int( rotatedPos );
         }
         return rotatedPoses;

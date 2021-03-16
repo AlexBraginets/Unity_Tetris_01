@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 [DefaultExecutionOrder(100)]
+[RequireComponent(typeof(TetraminoMono))]
 public class GravityComponent : MonoBehaviour
 {
     public float fallTime = 1f;
-    public DrawProjection projection;
     [SerializeField] private float timer;
+    public DrawProjection projection;
     private TetraminoMono tetraminoMono;
-    // Start is called before the first frame update
     void Start()
     {
         ResetTimer();
@@ -22,8 +22,7 @@ public class GravityComponent : MonoBehaviour
             Debug.LogError("No tetramino mono!");
         }
     }
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
         bool update = UpdateTimer(Time.deltaTime);
@@ -43,10 +42,9 @@ public class GravityComponent : MonoBehaviour
             }
             else
             {
-                bool collision = Grid.Collision(grid, tetramino, Vector2Int.down, Tetramino.RotationType.None);
+                bool collision = Grid.Collision(grid, tetramino, offset, Tetramino.RotationType.None);
                 if (collision)
                 {
-                    //Debug.Log("collision");
                     spawnNewTetramino = true;
                 }
                 else
@@ -66,7 +64,6 @@ public class GravityComponent : MonoBehaviour
     {
         Vector2Int spawnPosition = new Vector2Int(1, 21);
         tetraminoMono.UploadNewTetraminoData(TetraminoUtil.RandomType() );
-        //tetraminoMono.UploadNewTetraminoData(Tetramino.TetraminoType.O);
 
         tetraminoMono.SetCenterPosition(spawnPosition);
         tetraminoMono.RedoInit();
@@ -85,8 +82,5 @@ public class GravityComponent : MonoBehaviour
             return false;
         }
     }
-    private void ResetTimer()
-    {
-        timer = fallTime;
-    }
+    private void ResetTimer() => timer = fallTime;
 }

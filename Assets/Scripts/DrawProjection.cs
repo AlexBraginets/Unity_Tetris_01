@@ -2,22 +2,17 @@
 [DefaultExecutionOrder(101)]
 public class DrawProjection : MonoBehaviour
 {
-    private Tetramino projectionTetraminoData => projectionTetraminoMono.tetramino;
-    private Tetramino.TetraminoType type => tetraminoToTrack.type;
-    // tetramino that should be projected
-    public TetraminoMono tetraminoToTrack;
-    // gameobject that is the projection of the tetramino
-    //[HideInInspector]     #new
-    public GameObject projection;
     // direction in which projection should be done
     private Vector2Int projectionDirection = Vector2Int.down;
-    private TetraminoMono projectionTetraminoMono
-    {
-        get
-        {
-            return projection.GetComponent<TetraminoMono>();
-        }
-    }
+    // tetramino that should be projected
+    private TetraminoMono tetraminoToTrack;
+    private Tetramino.TetraminoType type => tetraminoToTrack.type;
+    // gameobject that is the projection of the tetramino
+    //[HideInInspector]     #new
+    private GameObject projection;
+    private TetraminoMono projectionTetraminoMono => projection.GetComponent<TetraminoMono>();
+    private Tetramino projectionTetraminoData => projectionTetraminoMono.tetramino;
+    
     // show projection in the scene
     public void Draw(TetraminoMono tetraminoToProject)
     {
@@ -31,6 +26,7 @@ public class DrawProjection : MonoBehaviour
     // creates projection GameObject based on "tetramino to project"
     public TetraminoMono SetUpProjection(TetraminoMono tetraminoToProject)
     {
+        this.tetraminoToTrack = tetraminoToProject;
         Destroy(this.projection);
         this.projection = TetraminoMono.Instantiate(type, "DrawProjection.SetUpProjection");
         projectionTetraminoMono.SetOpacity(0.3f);
@@ -55,11 +51,8 @@ public class DrawProjection : MonoBehaviour
         projectionCopy.transform.parent = transform;
         projectionCopy.SetOpacity(1f);
         projectionCopy.SetCenterPosition(projectionTetraminoData.centerPos);
-        projectionCopy.tetramino.Rotate(projectionTetraminoData.rotationCount);
-        projectionCopy.UpdatePosesAfterRotation();
+        projectionCopy.Rotate(rotationCount);
         Grid.Ins.FreezeTetraminoArea(projectionCopy);
         return projectionCopy.tetramino;
-        //Debug.Log("projection rotation count: " + projectionTetraminoData.rotationCount);
-        //Debug.Log("tetramino to track rotation count: " + tetraminoToTrack.tetramino.rotationCount);
     }
 }
